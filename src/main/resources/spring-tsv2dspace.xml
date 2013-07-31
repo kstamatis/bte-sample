@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TEST-SPRING.XML -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="transformationEngine" class="gr.ekt.bte.core.TransformationEngine">
+		<property name="dataLoader" ref="dataLoaderTSV" />
+		<property name="workflow" ref="conjunctionTransformationWorkflow"/>
+		<property name="outputGenerator" ref="outputGenerator" />
+	</bean>
+
+	<bean id="dataLoaderTSV" class="gr.ekt.bte_biblio.dataloaders.TSVDataLoader">
+		<constructor-arg><value>E:\EKT\Code\Projects\classifier\btesample\src\main\resources\export-tsv</value></constructor-arg>
+	</bean>
+	
+	<bean id="transformationSpec" class="gr.ekt.bte.core.TransformationSpec">
+	    <property name="n_records"><value>4</value></property>
+	    <property name="offset"><value>0</value></property>
+	</bean>
+	
+	<bean id="conjunctionTransformationWorkflow"
+		class="gr.ekt.bte.core.LinearWorkflow">
+		<property name="process">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="dcMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key>
+						<value>TI</value>
+					</key>
+					<ref bean="titleDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>PT</value>
+					</key>
+					<ref bean="typeDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>AU</value>
+					</key>
+					<ref bean="authorDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>AB</value>
+					</key>
+					<ref bean="abstractDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>SO</value>
+					</key>
+					<ref bean="sourceDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>PY</value>
+					</key>
+					<ref bean="dateDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>SN</value>
+					</key>
+					<ref bean="issnDSpaceMetadata" />
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="ektMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key>
+						<value>TI</value>
+					</key>
+					<ref bean="titleDSpaceMetadata" />
+				</entry>
+				<entry>
+					<key>
+						<value>PT</value>
+					</key>
+					<ref bean="typeDSpaceMetadata" />
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="outputGenerator"
+		class="gr.ekt.bte_biblio.outputgenerators.DSpaceOutputGenerator">
+		<property name="mappings">
+			<map>
+				<entry>
+					<key>
+						<value>dc</value>
+					</key>
+					<ref bean="dcMap" />
+				</entry>
+				<entry>
+					<key>
+						<value>ekt</value>
+					</key>
+					<ref bean="ektMap" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="titleDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="title" />
+	</bean>
+	<bean id="typeDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="type" />
+	</bean>
+	<bean id="authorDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="contributor" />
+		<property name="qualifier" value="author" />
+	</bean>
+	<bean id="abstractDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="description" />
+		<property name="qualifier" value="abstract" />
+	</bean>
+	<bean id="sourceDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="source" />
+	</bean>
+	<bean id="dateDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="date" />
+	</bean>
+	<bean id="issnDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="identifier" />
+	</bean>
+</beans> 

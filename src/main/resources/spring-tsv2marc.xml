@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TEST-SPRING.XML -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="transformationEngine" class="gr.ekt.bte.core.TransformationEngine">
+		<property name="dataLoader" ref="dataLoaderTSV" />
+		<property name="workflow" ref="linearWorkflow"/>
+		<property name="outputGenerator" ref="outputGenerator" />
+	</bean>
+
+	<bean id="dataLoaderTSV" class="gr.ekt.bte_biblio.dataloaders.TSVDataLoader">
+		<constructor-arg><value>E:\EKT\Code\Projects\classifier\btesample\src\main\resources\export-tsv</value></constructor-arg>
+	</bean>
+	
+	<bean id="transformationSpec" class="gr.ekt.bte.core.TransformationSpec">
+	    <property name="n_records"><value>4</value></property>
+	    <property name="offset"><value>0</value></property>
+	</bean>
+	
+	<bean id="linearWorkflow"
+		class="gr.ekt.bte.core.LinearWorkflow">
+		<property name="process">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="outputGenerator"
+		class="gr.ekt.bte_biblio.outputgenerators.MarcOutputGenerator">
+		<property name="outputType"><value>stream</value></property>
+		<property name="mappings">
+			<list>
+				<bean class="gr.ekt.bte_biblio.domain.MarcMetadata">
+				    <property name="tag">
+						<value>260__</value>
+					</property>
+					<property name="repeatField">
+						<value>TI</value>
+					</property>
+					<property name="subfieldToFieldMapping">
+						<map>
+						    <entry key="a" value="TI"/>  
+					    </map>
+					</property>
+					<property name="defaultValuesMapping">
+						<map>
+						    <entry key="z" value="eng"/>  
+					    </map>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+</beans> 

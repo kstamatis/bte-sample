@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TEST-SPRING.XML -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="transformationEngine" class="gr.ekt.bte.core.TransformationEngine">
+		<property name="dataLoader" ref="dataLoaderMarc" />
+		<property name="workflow" ref="linearWorkflow" />
+		<property name="outputGenerator" ref="outputGenerator" />
+	</bean>
+
+	<bean id="dataLoaderMarc" class="gr.ekt.bte_biblio.dataloaders.MarcDataLoader">
+		<constructor-arg>
+			<value>E:\EKT\Code\Projects\classifier\btesample\src\main\resources\marc.mrc</value>
+		</constructor-arg>
+		<property name="mapping">
+			<list>
+				<bean class="gr.ekt.bte_biblio.domain.MarcMetadata">
+					<property name="tag">
+						<value>260__</value>
+					</property>
+					<property name="filters">
+						<map>
+							<entry key="c" value="c1993." />
+						</map>
+					</property>
+					<property name="valuePattern">
+						<value>{a}, {b}</value>
+					</property>
+					<property name="key">
+						<value>TITLE</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="transformationSpec" class="gr.ekt.bte.core.TransformationSpec">
+	    <property name="n_records"><value>4</value></property>
+	    <property name="offset"><value>0</value></property>
+	</bean>
+	
+	<bean id="linearWorkflow" class="gr.ekt.bte.core.LinearWorkflow">
+		<property name="process">
+			<list>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dcMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key>
+						<value>TITLE</value>
+					</key>
+					<ref bean="titleDSpaceMetadata" />
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="outputGenerator"
+		class="gr.ekt.bte_biblio.outputgenerators.DSpaceOutputGenerator">
+		<property name="mappings">
+			<map>
+				<entry>
+					<key>
+						<value>dc</value>
+					</key>
+					<ref bean="dcMap" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="titleDSpaceMetadata" class="gr.ekt.bte_biblio.domain.DSpaceMetadata">
+		<property name="schema" value="dc" />
+		<property name="element" value="title" />
+	</bean>
+</beans> 
