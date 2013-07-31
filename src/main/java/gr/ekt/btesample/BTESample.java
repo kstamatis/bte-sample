@@ -1,8 +1,6 @@
 package gr.ekt.btesample;
 
-import java.util.Date;
-
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import gr.ekt.bte.core.TransformationEngine;
 import gr.ekt.bte.core.TransformationSpec;
@@ -19,16 +17,18 @@ public class BTESample
     {
     	String confFile = args[0]; 
 		
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(confFile);
-
+    	FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(confFile);
+		
 		TransformationEngine te = (TransformationEngine) context.getBean("transformationEngine");
 			
 		try {
 			TransformationSpec tspec = (TransformationSpec) context.getBean("transformationSpec");
 			te.transform(tspec);
 		} catch (BadTransformationSpec e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+		    if (context != null)
+		    	context.close();
 		}
 
     }
